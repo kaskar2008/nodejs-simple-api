@@ -1,4 +1,5 @@
 module.exports = {
   host: 'localhost',
-  port: 5000
+  httpPort: 5000,
+  httpsPort: 5001
 }
