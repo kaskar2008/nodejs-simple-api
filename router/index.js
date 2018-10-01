@@ -70,19 +70,23 @@ class Router {
 
     let result = null;
 
-    if (typeof controller === 'function') {
-      result = controller(data);
+    try {
+      if (typeof controller === 'function') {
+        result = controller(data);
 
-      if (typeof result === 'function') {
-        return result(data.request, data.response);
+        if (typeof result === 'function') {
+          return result(data.request, data.response);
+        } else {
+          result = JSON.stringify(result);
+        }
       } else {
-        result = JSON.stringify(result);
+        result = JSON.stringify(controller);
       }
-    } else {
-      result = JSON.stringify(controller);
-    }
 
-    this.handlers[200](data.request, data.response, result);
+      this.handlers[200](data.request, data.response, result);
+    } catch (e) {
+      this.handlers[500](data.request, data.response, e);
+    }
   }
 }
 
