@@ -12,6 +12,7 @@ class UserController {
 
   myHandler() {
     return (req, res) => {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
       res.end('this is mine!');
     }
   }
