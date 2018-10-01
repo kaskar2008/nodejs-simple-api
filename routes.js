@@ -1,14 +1,19 @@
 const UserController = require('./controllers/user');
 
 module.exports = {
-  'user': {
+  user: {
     get: UserController.index,
     post: UserController.handlePost
   },
   'user/custom/handler/test': {
     get: UserController.myHandler
   },
-  'ping': {
+  ping: {
     get: 'ok'
+  },
+  hello: {
+    get: {
+      message: 'Welcome to my reality'
+    }
   }
 };
