@@ -12,8 +12,8 @@ module.exports = {
     get: 'ok'
   },
   hello: {
-    get: {
-      message: 'Welcome to my reality'
-    }
+    get: (data) => ({
+      message: `Welcome to my reality${data.route.query && data.route.query.name ? ', ' + data.route.query.name : ''}`
+    })
   }
 };
