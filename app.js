@@ -2,6 +2,9 @@ const APIServer = require('./server');
 const routes = require('./routes');
 const config = require('./config');
 
+const path = require('path');
+const Store = require('./store');
+
 /**
  * Main application class
  */
@@ -10,6 +13,19 @@ class App {
     this.server = new APIServer({
       ...config,
       routes
+    });
+
+    // store testing
+    let store = new Store({
+      provider: {
+        datasetDir: path.join(__dirname, './.data')
+      }
+    });
+
+    store.createCollection('test/users/nested/lol').then(col => {
+      if (col) {
+        console.log('created ' + col.name + ' collection');
+      }
     });
   }
 
