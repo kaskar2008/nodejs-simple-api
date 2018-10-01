@@ -7,5 +7,8 @@ module.exports = {
   },
   'user/custom/handler/test': {
     get: UserController.myHandler
+  },
+  'ping': {
+    get: 'ok'
   }
 };
