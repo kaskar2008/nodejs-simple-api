@@ -1,5 +1,8 @@
 const UserController = require('./controllers/user');
 
+/**
+ * Route leaf could be a everything that can be JSONify or a custom function
+ */
 module.exports = {
   user: {
     get: UserController.index,
