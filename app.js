@@ -5,9 +5,7 @@ const config = require('./config');
 class App {
   constructor() {
     this.server = new APIServer({
-      port: config.port,
-      host: config.host,
-      mode: config.serverMode,
+      ...config,
       routes
     });
   }
