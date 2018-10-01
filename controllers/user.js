@@ -1,4 +1,7 @@
 class UserController {
+  /**
+   * Handles GET request
+   */
   index() {
     return {
       ok: true,
@@ -6,10 +9,18 @@ class UserController {
     };
   }
 
+  /**
+   * Handles a POST request
+   * @param {RouteData} data Route data
+   */
   handlePost(data) {
     return data.body;
   }
 
+  /**
+   * Handles GET request
+   * Custom response test
+   */
   myHandler() {
     return (req, res) => {
       res.writeHead(200, {'Content-Type': 'text/plain'});
