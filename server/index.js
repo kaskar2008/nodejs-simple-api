@@ -6,7 +6,8 @@ const HTTPModes = { http, https };
 
 class APIServer {
   constructor(options = {}) {
-    this.port = options.port || 3000;
+    this.httpPort = options.httpPort || 3000;
+    this.httpsPort = options.httpsPort || 5000;
     this.host = options.host || 'localhost';
     this.middlewares = [];
     this.router = new Router({
@@ -16,29 +17,54 @@ class APIServer {
     this.mode = options.mode || 'http';
   }
 
-  start() {
-    if (!~Object.keys(HTTPModes).indexOf(this.mode)) {
+  createServer(mode) {
+    let instanceVariable = '$' + mode + 'instance';
+    if (!~Object.keys(HTTPModes).indexOf(mode)) {
       throw new Error(`"mode" should be one of [${Object.keys(HTTPModes).join('|')}]`);
     }
 
-    this.$instance = HTTPModes[this.mode].createServer((req, res) => this.router.handle(req, res));
+    Object.defineProperty(this, instanceVariable, {
+      value: HTTPModes[mode].createServer((req, res) => this.router.handle(req, res))
+    });
 
-    this.$instance.on('error', (e) => {
+    this[instanceVariable].on('error', (e) => {
       console.log('server error', e);
     });
 
     return new Promise((resolve, reject) => {
       try {
-        this.$instance.listen(this.port, this.host, () => {
+        this[instanceVariable].listen(this[mode + 'port'], this.host, () => {
           resolve({
-            port: this.port,
-            host: this.host
+            [mode + 'Port']: this[mode + 'Port']
           });
         });
       } catch (e) {
         reject(e);
       }
-    })
+    });
+  }
+
+  start() {
+    return new Promise((resolve, reject) => {
+      let info = {
+        host: this.host
+      };
+
+      let promises = [];
+      if (this.mode === 'both') {
+        Object.keys(HTTPModes).forEach((mode) => {
+          promises.push(this.createServer(mode));
+        });
+      } else {
+        promises.push(this.createServer(this.mode));
+      }
+      Promise.all(promises).then(values => {
+        values.forEach(el => {
+          info = { ...info, ...el };
+        });
+        resolve(info);
+      });
+    });
   }
 
   addMiddleware(middleware) {
