@@ -1,3 +1,5 @@
+const { parse } = require('querystring');
+
 const methods = [
   'post',
   'put',
@@ -15,13 +17,23 @@ module.exports = (data, next) => {
   if (~methods.indexOf(data.request.method.toLowerCase())) {
     var body = '';
 
-    data.request.on('data', function (data) {
+    data.request.on('data', (data) => {
       body += data;
     });
 
-    data.request.on('end', function () {
+    data.request.on('end', () => {
       try {
-        data.body = JSON.parse(body);
+        let contentType = data.request.headers['content-type'];
+        console.log(contentType);
+        if (contentType === 'application/json') {
+          data.body = JSON.parse(body);
+        } else if (contentType === 'text/plain') {
+          data.body = body;
+        } else if (contentType.includes('multipart/form-data;')) {
+          // TODO: make a handler
+        } else if (contentType === 'application/x-www-form-urlencoded') {
+          // TODO: make a handler
+        }
       } catch (e) {
         next();
       }
