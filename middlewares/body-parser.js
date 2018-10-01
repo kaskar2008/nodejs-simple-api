@@ -1,5 +1,8 @@
-const { parse } = require('querystring');
+/**
+ * Middleware for handling json body in the Request
+ */
 
+// acceptable methods
 const methods = [
   'post',
   'put',
@@ -14,6 +17,7 @@ const methods = [
 ];
 
 module.exports = (data, next) => {
+  // validate method
   if (~methods.indexOf(data.request.method.toLowerCase())) {
     var body = '';
 
