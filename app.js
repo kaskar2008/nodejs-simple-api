@@ -2,6 +2,9 @@ const APIServer = require('./server');
 const routes = require('./routes');
 const config = require('./config');
 
+/**
+ * Main application class
+ */
 class App {
   constructor() {
     this.server = new APIServer({
@@ -21,6 +24,10 @@ class App {
     }
   }
 
+  /**
+   * Adds middleware to the application
+   * @param {function} middleware Middleware function
+   */
   use(middleware) {
     this.server.addMiddleware(middleware);
   }
